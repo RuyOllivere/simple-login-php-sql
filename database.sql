@@ -29,5 +29,5 @@ CREATE TABLE IF NOT EXISTS logs_acesso(
 
 -- Insert example user with password: '12345'
 
-INSERT INTO usuarios(nome, email, senha_hash) VALUES
-('User test', 'teste@gmail.com', '5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5');
+-- INSERT INTO usuarios(nome, email, senha_hash) VALUES
+-- ('User test', 'teste@gmail.com', '5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5');
