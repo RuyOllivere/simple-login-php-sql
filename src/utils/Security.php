@@ -26,7 +26,7 @@ class Security{
     }
 
     public static function validateName($name) {
-        return !empty($name) && strlen($name) >= 2;
+        return !empty($name) && strlen($name) >= 2 && strlen($name) <= 100;
     }
 }
 
