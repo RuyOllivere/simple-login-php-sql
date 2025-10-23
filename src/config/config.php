@@ -37,4 +37,23 @@ function isLoggedIn() {
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
+// Require login
+function requireLogin(){
+    if(isLoggedIn()){
+        $_SESSION['error'] = 'Please, log in to access this page.';
+        header('Location: ../../public/login.php');
+        exit();
+    }
+}
+
+// Debug function (Development)
+function debug($data) {
+    if(ENVIRONMENT === 'development'){
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+    }
+}
+
+
 ?>
