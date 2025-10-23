@@ -11,7 +11,7 @@ class Session {
                 'httponly' => true,
                 'samesite' => 'Strict'
             ]);
-
+            // testing
             session_start();
 
         }
