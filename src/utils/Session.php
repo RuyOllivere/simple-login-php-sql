@@ -12,6 +12,7 @@ class Session {
                 'samesite' => 'Strict'
             ]);
             // testing
+            // test
             session_start();
 
         }
