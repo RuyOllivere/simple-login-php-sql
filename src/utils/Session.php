@@ -62,6 +62,13 @@ class Session {
         ];
     }
 
+        
+    public static function setFlash($key, $message){
+        if(session_status() != PHP_SESSION_NONE){
+            $_SESSION['flash'][$key] = $message;
+        }
+    }
+
 }
 
 ?>
