@@ -104,11 +104,24 @@ function handleLogin($pdo){
 
     if(empty($errors)){
         try{
+            $userModel = new User($pdo);
 
+            $usuario = $userModel->findByEmail($email);
+            
+            if($usuario && password_verify($senha, $usuario['senha_hash'])){
+                if($usuario['ativo'] == 1){
+                    // Success Login
+                    Session::setUser($usuario);
+
+                    // Update last login
+                    $userModel->updateLastLogin($usuario['id']);
+
+                }
+            }
         }
 
         catch(Exception $e){
-            
+
         }
     }
 
