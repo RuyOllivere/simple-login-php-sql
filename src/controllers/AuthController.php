@@ -92,6 +92,25 @@ function handleLogin($pdo){
     $senha = $_POST['senha'] ?? '';
 
     // Validation
+    $errors = [];
+
+    if (!Security::validateEmail($emil)){
+        $errors[] = "Email incorreto.";
+    }
+
+    if(empty($senha)){
+        $errors[]="Senha não pode ser vazia.";
+    }
+
+    if(empty($errors)){
+        try{
+
+        }
+
+        catch(Exception $e){
+            
+        }
+    }
 
 }
 
