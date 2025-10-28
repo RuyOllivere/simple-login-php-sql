@@ -94,7 +94,7 @@ function handleLogin($pdo){
     // Validation
     $errors = [];
 
-    if (!Security::validateEmail($emil)){
+    if (!Security::validateEmail($email)){
         $errors[] = "Email incorreto.";
     }
 
@@ -115,7 +115,9 @@ function handleLogin($pdo){
 
                     // Update last login
                     $userModel->updateLastLogin($usuario['id']);
-
+                    
+                    // Register success login
+                    Security::logAccess($pdo, $usuario['id'], 'login', true);
                 }
             }
         }
