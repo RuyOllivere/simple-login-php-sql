@@ -72,12 +72,26 @@ function handleRegister($pdo){
             $errors[] = "Erro dentro do sistema, realize o cadastro novamente mais tarde.";
         }
 
-        
-
-    }
+        }
+        if(!empty($errors)){
+            Session::setFlash('error', implode('<br>', $errors));
+            header('Location: ../../public/cadastro.php');
+        }
 }
 
+
 function handleLogin($pdo){
+
+    if(!security::verifyCSRFToken($_POST['csrf_token']) ?? ''){
+        Session::setFlash('error', "Token de segurança inválido");
+        header('Location: ../../public/login.php');
+        exit();
+    }
+
+    $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $senha = $_POST['senha'] ?? '';
+
+    // Validation
 
 }
 
