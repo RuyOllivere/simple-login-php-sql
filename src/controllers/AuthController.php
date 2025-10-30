@@ -118,13 +118,31 @@ function handleLogin($pdo){
                     
                     // Register success login
                     Security::logAccess($pdo, $usuario['id'], 'login', true);
+
+                    header('Location: ../../public/dashboard.php');
+                    exit();
+                } else{
+                    $errors[] = "Conta desativada";
+                } 
+                
+            }else{
+                $errors[] = "Usuário ou senha incorretos";
+
+                // Register failed attempt to enter the account
+                if($usuario) {
+                    Security::logAccess($pdo, $usuario['id'], 'login_failed', false);
                 }
             }
+        }catch(PDOException $e){
+            error_log("Erro no login: " . $e->getMessage());
+            $errors[] = "Erro dentro do sistema, realize o login novamente mais tarde.";
         }
 
-        catch(Exception $e){
+        
+    }
 
-        }
+    if(!empty($errors)){
+        Session::setFlash('error', implode('<br>'));
     }
 
 }

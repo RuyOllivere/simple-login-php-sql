@@ -1,49 +1,38 @@
 <?php
 
 class Session {
-    public static function start(){
-        if(session_status() == PHP_SESSION_NONE){
+    public static function start() {
+        if (session_status() == PHP_SESSION_NONE) {
             session_set_cookie_params([
                 'lifetime' => 0,
-                'path' => '/',
-                'domain' => '',
+                'path' => '/', // cookie em todas as pág do site
+                'domain' => '', // localhost
                 'secure' => true,
                 'httponly' => true,
                 'samesite' => 'Strict'
             ]);
-            // testing
-            // test
+ 
             session_start();
-
         }
     }
-
-    public static function destroy(){
-        if(session_status() != PHP_SESSION_NONE){
-            $_SESSION = [];
-            if(ini_get("session.use_cookies")){
-                $params = session_get_cookie_params();
-                setcookie(session_name(), '', time() - 42000,
-                    $params["path"], $params["domain"],
-                    $params["secure"], $params["httponly"]
-                );
-            }
-            session_destroy();
-        }
+ 
+    public static function destroy() {
+        $_SESSION = [];
+        session_destroy();
+        setcookie(session_name(), '', time() - 3600, '/');
     }
-
-    public static function regenerate(){
-        if(session_status() != PHP_SESSION_NONE){
-            session_regenerate_id(true);
-        }
+ 
+    public static function setFlash($type, $message) {
+        $_SESSION['flash'][$type] = $message;
     }
-
-    public static function getFlash($key){
-        if(session_status() != PHP_SESSION_NONE && isset($_SESSION['flash'][$key])){
-            $value = $_SESSION['flash'][$key];
-            unset($_SESSION['flash'][$key]);
-            return $value;
+ 
+    public static function getFlash($type) {
+        if(isset($_SESSION['flash'][$type])) {
+            $message = $_SESSION['flash'][$type];
+            unset($_SESSION['flash'][$type]);
+            return $message;
         }
+ 
         return null;
     }
 
@@ -60,13 +49,6 @@ class Session {
             'nome' => $_SESSION['user_nome'] ?? null,
             'email'=> $_SESSION['user_email'] ?? null,
         ];
-    }
-
-        
-    public static function setFlash($key, $message){
-        if(session_status() != PHP_SESSION_NONE){
-            $_SESSION['flash'][$key] = $message;
-        }
     }
 
 }
