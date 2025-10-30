@@ -41,7 +41,7 @@ function isLoggedIn() {
 function requireLogin(){
     if(isLoggedIn()){
         $_SESSION['error'] = 'Please, log in to access this page.';
-        header('Location: ../../public/login.php');
+        header('Location: ../public/login.php');
         exit();
     }
 }
