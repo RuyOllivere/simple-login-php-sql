@@ -12,8 +12,8 @@ $dbName = 'sistema_login_prod';
 $charset = 'utf8mb4';
 
 // Include utilities
-require_once '../utils/Security.php';
-require_once '../utils/Session.php';
+require_once '../src/utils/Security.php';
+require_once '../src/utils/Session.php';
 
 // Initialize secure session
 Session::start();
