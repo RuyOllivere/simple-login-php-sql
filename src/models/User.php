@@ -9,7 +9,7 @@ class User{
     }
 
     public function findByEmail($email) {
-        $sql = "SELECT id, nome, email, senha_hash, ativo, data_cadastro, ultimo_login, FROM usuarios WHERE email =?";
+        $sql = "SELECT id, nome, email, senha_hash, ativo, data_cadastro, ultimo_login FROM usuarios WHERE email =?";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$email]);
@@ -19,7 +19,7 @@ class User{
 
     public function findById($user_id){
 
-        $sql = "SELECT id, nome, email, senha_hash, ativo, data_cadastro, ultimo_login, FROM usuarios WHERE id = ? AND ativo = 1";
+        $sql = "SELECT id, nome, email, senha_hash, ativo, data_cadastro, ultimo_login FROM usuarios WHERE id = ? AND ativo = 1";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$user_id]);

@@ -69,7 +69,7 @@ function handleRegister($pdo){
             }
         } catch(Exception $e){
             error_log("Register error: " . $e->getMessage());
-            $errors[] = "Erro dentro do sistema, realize o cadastro novamente mais tarde.";
+            $errors[] = "Erro dentro do sistema, realize o cadastro novamente mais tarde." . $e;
         }
 
         }
@@ -135,14 +135,19 @@ function handleLogin($pdo){
             }
         }catch(PDOException $e){
             error_log("Erro no login: " . $e->getMessage());
-            $errors[] = "Erro dentro do sistema, realize o login novamente mais tarde.";
+            $errors[] = "Erro dentro do sistema, realize o login novamente mais tarde." . $e;
         }
 
         
     }
 
     if(!empty($errors)){
-        Session::setFlash('error', implode('<br>'));
+        Session::setFlash('error', implode('<br>', $errors));
+        header('Location: ../../public/login.php');
+        exit();
+
+        // pode dar erro
+
     }
 
 }

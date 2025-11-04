@@ -9,15 +9,16 @@ requireLogin();
 try{
     // Search user data
     $userModel = new User($pdo);
-    $usuario = $userModel->findById($_SESSION['usuario_id']);
+    $usuario = $userModel->findById($_SESSION['user_id']);
 
     if(!$usuario){
         session_destroy();
         header('Location: login.php');
+        exit();
     }
 
     // Login history
-    $loginHistory = $userModel->getLoginHistory($_SESSION['usuario_id'], 5);
+    $loginHistory = $userModel->getLoginHistory($_SESSION['user_id'], 5);
 
 } catch(PDOException $e){
     error_log("Erro ao iniciar a conta: " . $e->getMessage());
