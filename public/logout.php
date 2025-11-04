@@ -11,6 +11,9 @@ if(isset($_SESSION['user_id'])){
 }
 
 // Destroying session completely
-Session::destroy()
+Session::destroy();
+
+Session::setFlash('success', 'logout concluído');
+header('Location: login.php')
 
 ?>
