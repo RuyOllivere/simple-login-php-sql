@@ -4,10 +4,11 @@ require_once '../src/config/config.php';
 
 // Redirect to dashboard if logged
 
-if(isLoggedIn()){
-    header('Location: dashboard.php');
-    exit();
-}
+// if(isLoggedIn()){
+//     header('Location: dashboard.php');
+//     exit();
+// }
+
 ?>
 
 <!DOCTYPE html>

@@ -68,7 +68,7 @@ function handleRegister($pdo){
 
             }
         } catch(Exception $e){
-            error_log("Register error: " . $e->getMessage());
+            error_log("Register error: " . $e->getMessage(), 3, "../logs/errors.log");
             $errors[] = "Erro dentro do sistema, realize o cadastro novamente mais tarde." . $e;
         }
 
@@ -134,7 +134,7 @@ function handleLogin($pdo){
                 }
             }
         }catch(PDOException $e){
-            error_log("Erro no login: " . $e->getMessage());
+            error_log("Erro no login: " . $e->getMessage(), 3, "../logs/errors.log");
             $errors[] = "Erro dentro do sistema, realize o login novamente mais tarde." . $e;
         }
 

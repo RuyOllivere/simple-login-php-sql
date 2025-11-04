@@ -1,6 +1,6 @@
 <?php
 
-
+date_default_timezone_set('America/Sao_Paulo');
 
 require_once '../src/config/config.php';
 require_once '../src/models/User.php';
@@ -21,7 +21,7 @@ try{
     $loginHistory = $userModel->getLoginHistory($_SESSION['user_id'], 5);
 
 } catch(PDOException $e){
-    error_log("Erro ao iniciar a conta: " . $e->getMessage());
+    error_log("Erro ao iniciar a conta: " . $e->getMessage(), 3, "../logs/errors.log");
     die("Error to load the page.");
 }
 
@@ -95,10 +95,38 @@ $csrf_token = Security::generateCSFRToken();
                         <label for="nome">Nome completo: </label>
                         <input type="text" name="nome" id="nome" required value="<?php echo htmlspecialchars($usuario['nome'])?>" minlength="2" maxlength="100">
                     </div>
+                    <button type="submit" class="btn btn-secundary">Atualizar</button>
 
                 </form>
             </div>
 
+            <?php if(!empty($loginHistory)): ?>
+
+                <div class="info-card">
+                    <h3>Histórico de login</h3>
+
+                    <div class="history-list"> 
+                        <?php foreach ($loginHistory as $log): ?>
+                            <div class="history-item>
+                                <?php echo $log['sucesso'] ? 'success' : 'error'; ?>">
+                                <span class="action"> <?php echo $log['acao']; ?></span>
+
+                                <span class="date"> <?php echo date('d/M/Y H:i', strtotime($log['data_acesso'])); ?> </span>
+
+                                <span class="ip"><?php echo $log['ip_address']; ?></span>
+
+                                <span class="status"> <?php echo $log['sucesso'] ? '☑️' : 'X'; ?> </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                </div>
+
+            <?php endif; ?>
+        </div>
+        <div class="actions">
+            <a href="index.php" class="btn btn-secondary">Página inicial</a>
+            <a href="logout.php" class="btn btn-danger">Logout</a>
         </div>
     </div>
 </body>

@@ -54,6 +54,7 @@ function handleUpdateProfile($pdo) {
     }
 
     header('Location: ../../public/dashboard.php');
+    exit();
 
 }
 ?>
