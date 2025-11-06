@@ -139,30 +139,6 @@ $csrf_token = Security::generateCSFRToken();
                             <?php endif; ?>
                         </div>
 
-                            <?php if(!empty($loginHistory)): ?>
-                            <div class="col-md-6 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-header">
-                                        <h5 class="mb-0">Histórico de Login</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="list-group">
-                                            <?php foreach ($loginHistory as $log): ?>
-                                                <div class="list-group-item d-flex justify-content-between align-items-center <?php echo $log['sucesso'] ? 'list-group-item-success' : 'list-group-item-danger'; ?>">
-                                                    <div>
-                                                        <strong><?php echo $log['acao']; ?></strong><br>
-                                                        <small><?php echo date('d/M/Y H:i', strtotime($log['data_acesso'])); ?> - <?php echo $log['ip_address']; ?></small>
-                                                    </div>
-                                                    <span><?php echo $log['sucesso'] ? '☑️' : 'X'; ?></span>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-
                         <div class="text-center mt-4">
                             <a href="index.php" class="btn btn-secondary me-2 animate-bounce">Página Inicial</a>
                             <a href="logout.php" class="btn btn-danger animate-bounce">Logout</a>

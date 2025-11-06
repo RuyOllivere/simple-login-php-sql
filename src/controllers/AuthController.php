@@ -179,7 +179,7 @@ function handleReset($pdo){
 
             if($usuario){
                 $token = $userModel->createResetToken($usuario['id']);
-                $reset_link = "http://localhost/projetoNovoLoginPhp/public/reset.php?token=" . $token;
+                $reset_link = "http://localhost/simple-login-php-sql/public/reset.php?token=" . $token;
 
                 // Simulate email sending
                 $subject = "Recuperação de Senha";
