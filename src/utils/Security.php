@@ -28,7 +28,8 @@ class Security{
 
     // Validate if the password is "safe"
     public static function validatePassword($password){
-        return strlen($password) >= 8;
+        return strlen($password) >= 8 && preg_match('/[A-Za-z0-9]/', $password) && preg_match('/[0-9]/', $password) && preg_match('/[A-Z]/', $password) && preg_match('/[a-z]/', $password);
+
     }
 
     // Validate the lenght min and max of a name

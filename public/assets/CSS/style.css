@@ -1,0 +1,89 @@
+/* Custom styles for modern design and animations */
+
+/* Gradient background for header */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+/* Slide down animation for alerts */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-down {
+    animation: slideDown 0.5s ease-out;
+}
+
+/* Bounce animation for buttons */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+
+/* Hover effects for buttons */
+.btn:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+/* Card shadow enhancement */
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* List group items with subtle hover */
+.list-group-item {
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .d-flex.justify-content-around {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        margin-bottom: 10px;
+    }
+}

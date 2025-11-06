@@ -58,6 +58,36 @@ class User{
         return $stmt->fetchAll();
     }
 
-}   
+    public function createResetToken($user_id) {
+        $token = bin2hex(random_bytes(32));
+        $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+        $sql = "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id, $token, $expires_at]);
+
+        return $token;
+    }
+
+    public function findResetToken($token) {
+        $sql = "SELECT id, user_id, expires_at, used FROM password_reset_tokens WHERE token = ? AND used = 0 AND expires_at > NOW()";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$token]);
+        return $stmt->fetch();
+    }
+
+    public function useResetToken($token) {
+        $sql = "UPDATE password_reset_tokens SET used = 1 WHERE token = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$token]);
+    }
+
+    public function updatePassword($user_id, $new_password_hash) {
+        $sql = "UPDATE usuarios SET senha_hash = ? WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$new_password_hash, $user_id]);
+    }
+
+}
 
 ?>

@@ -1,9 +1,22 @@
 <?php
 
 require_once '../src/config/config.php';
+require_once '../src/models/User.php';
 
-if(isLoggedIn()){
-    header('Location: dashboard.php');
+$token = $_GET['token'] ?? '';
+
+if(empty($token)){
+    Session::setFlash('error', 'Token inválido.');
+    header('Location: login.php');
+    exit();
+}
+
+$userModel = new User($pdo);
+$token_data = $userModel->findResetToken($token);
+
+if(!$token_data){
+    Session::setFlash('error', 'Token inválido ou expirado.');
+    header('Location: login.php');
     exit();
 }
 
@@ -16,8 +29,8 @@ $csrf_token = Security::generateCSFRToken();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Redefinir Senha</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/CSS/style.css">
 </head>
 <body class="bg-light">
@@ -26,7 +39,7 @@ $csrf_token = Security::generateCSFRToken();
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-lg animate-fade-in">
                     <div class="card-header bg-gradient-primary text-white text-center">
-                        <h1 class="mb-0">Login</h1>
+                        <h1 class="mb-0">Redefinir Senha</h1>
                     </div>
                     <div class="card-body">
                         <?php
@@ -45,34 +58,27 @@ $csrf_token = Security::generateCSFRToken();
                             </div>
                         <?php endif; ?>
 
-                        <form action="../src/controllers/AuthController.php?action=login" method="POST">
+                        <form action="../src/controllers/AuthController.php?action=reset_password" method="POST">
                             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
 
                             <div class="mb-3">
-                                <label for="email" class="form-label">Digite seu email:</label>
-                                <input type="email" name="email" id="email" class="form-control" required value="<?php echo $_POST['email'] ?? '';?>" placeholder="Seu email">
+                                <label for="nova_senha" class="form-label">Nova Senha:</label>
+                                <input type="password" name="nova_senha" id="nova_senha" class="form-control" required minlength="8" placeholder="8 caracteres" autocomplete="new-password">
                             </div>
 
                             <div class="mb-3">
-                                <label for="senha" class="form-label">Digite sua senha:</label>
-                                <input type="password" name="senha" id="senha" class="form-control" required minlength="8" placeholder="8 caracteres" autocomplete="new-password">
+                                <label for="confirmar_senha" class="form-label">Confirmar Nova Senha:</label>
+                                <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control" required minlength="8" placeholder="8 caracteres" autocomplete="new-password">
                             </div>
 
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg animate-bounce">Login</button>
+                                <button type="submit" class="btn btn-primary btn-lg animate-bounce">Redefinir Senha</button>
                             </div>
                         </form>
 
-                        <div class="alert alert-info animate-fade-in mt-4">
-                            <p class="mb-1"><strong>Credenciais de teste:</strong></p>
-                            <p class="mb-1">Email: exemplo@email.com</p>
-                            <p class="mb-0">Senha: 123456</p>
-                        </div>
-
                         <div class="text-center mt-3">
-                            <a href="index.php" class="btn btn-link">Home</a>
-                            <a href="cadastro.php" class="btn btn-link">Se não possuir conta, realize seu registro</a>
-                            <a href="recuperar_senha.php" class="btn btn-link">Esqueceu a senha?</a>
+                            <a href="login.php" class="btn btn-link">Voltar ao Login</a>
                         </div>
                     </div>
                 </div>

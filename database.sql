@@ -27,6 +27,19 @@ CREATE TABLE IF NOT EXISTS logs_acesso(
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 ) ENGINE = InnoDB;
 
+-- Password Reset Tokens table
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    used TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    INDEX idx_token(token),
+    INDEX idx_expires_at(expires_at)
+) ENGINE = InnoDB;
+
 -- Insert example user with password: '12345'
 
 -- INSERT INTO usuarios(nome, email, senha_hash) VALUES
