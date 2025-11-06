@@ -40,6 +40,21 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
     INDEX idx_expires_at(expires_at)
 ) ENGINE = InnoDB;
 
+-- Table must be
+
+CREATE TABLE tokens_reset (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    token VARCHAR(64) NOT NULL,
+    expira_em TIMESTAMP NOT NULL,
+    usado TINYINT(1) DEFAULT 0,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    INDEX idx_token (token),
+    INDEX idx_expira (expira_em)
+);
+
+ALTER TABLE usuarios ADD COLUMN email_verificado TINYINT(1) DEFAULT 0;
+
 -- Insert example user with password: '12345'
 
 -- INSERT INTO usuarios(nome, email, senha_hash) VALUES
