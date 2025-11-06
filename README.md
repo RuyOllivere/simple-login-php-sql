@@ -265,7 +265,7 @@ Logout:
 
  ## 🚀 Como Executar Localmente
 1. Clone o repositório:  
-    `git clone https://github.com/SEU_USUARIO/sistema-login-php.git`
+    `git clone https://github.com/RuyOllivere/simple-login-php-sql.git`
     `cd sistema-login-php`
 
 2. Configure o banco de dados:
@@ -275,7 +275,7 @@ Logout:
 ---
 
 # 1. Clonar o repositório
-git clone https://github.com/EMPRESA/sistema-login-php.git
+git clone https://github.com/RuyOllivere/simple-login-php-sql.git
 cd sistema-login-php
 
 # 2. Criar banco de dados
