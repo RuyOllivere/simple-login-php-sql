@@ -13,6 +13,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         handleReset($pdo);
     } elseif($action === 'reset_password'){
         handleResetPassword($pdo);
+    } elseif($action === 'update_profile'){
+        handleUpdateProfile($pdo);
+    } elseif($action === 'upload_profile_picture'){
+        handleUploadProfilePicture($pdo);
     }
 }
 
@@ -262,6 +266,104 @@ function handleResetPassword($pdo){
     }
 
     header('Location: ../../public/reset.php?token=' . urlencode($token));
+    exit();
+}
+
+function handleUpdateProfile($pdo){
+    if(!Security::verifyCSRFToken($_POST['csrf_token']) ?? ''){
+        Session::setFlash('error', "Token de segurança inválido");
+        header('Location: ../../public/dashboard.php');
+        exit();
+    }
+
+    $nome = Security::sanitizeInput($_POST['nome'] ?? '');
+
+    $errors = [];
+
+    if(!Security::validateName($nome)){
+        $errors[] = "Nome deve ter entre 2 e 100 caracteres.";
+    }
+
+    if(empty($errors)){
+        try{
+            $userModel = new User($pdo);
+            if($userModel->updateProfile($_SESSION['user_id'], $nome)){
+                Session::setFlash('success', 'Perfil atualizado com sucesso.');
+            } else {
+                $errors[] = "Erro ao atualizar perfil.";
+            }
+        } catch(Exception $e){
+            error_log("Update profile error: " . $e->getMessage(), 3, "../logs/errors.log");
+            $errors[] = "Erro dentro do sistema.";
+        }
+    }
+
+    if(!empty($errors)){
+        Session::setFlash('error', implode('<br>', $errors));
+    }
+
+    header('Location: ../../public/dashboard.php');
+    exit();
+}
+
+function handleUploadProfilePicture($pdo){
+    if(!Security::verifyCSRFToken($_POST['csrf_token']) ?? ''){
+        Session::setFlash('error', "Token de segurança inválido");
+        header('Location: ../../public/dashboard.php');
+        exit();
+    }
+
+    $errors = [];
+
+    if(!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK){
+        $errors[] = "Erro no upload da imagem.";
+    } else {
+        $file = $_FILES['profile_picture'];
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+        $max_size = 2 * 1024 * 1024; // 2MB
+
+        if(!in_array($file['type'], $allowed_types)){
+            $errors[] = "Tipo de arquivo não permitido. Use apenas JPG, PNG ou GIF.";
+        }
+
+        if($file['size'] > $max_size){
+            $errors[] = "Arquivo muito grande. Máximo 2MB.";
+        }
+
+        if(empty($errors)){
+            $upload_dir = '../../public/uploads/profile_pictures/';
+            if(!is_dir($upload_dir)){
+                mkdir($upload_dir, 0755, true);
+            }
+
+            $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $new_filename = 'profile_' . $_SESSION['user_id'] . '_' . time() . '.' . $file_extension;
+            $file_path = $upload_dir . $new_filename;
+
+            if(move_uploaded_file($file['tmp_name'], $file_path)){
+                try{
+                    $userModel = new User($pdo);
+                    $relative_path = 'uploads/profile_pictures/' . $new_filename;
+                    if($userModel->updateProfilePicture($_SESSION['user_id'], $relative_path)){
+                        Session::setFlash('success', 'Foto de perfil atualizada com sucesso.');
+                    } else {
+                        $errors[] = "Erro ao salvar caminho da imagem.";
+                    }
+                } catch(Exception $e){
+                    error_log("Upload profile picture error: " . $e->getMessage(), 3, "../logs/errors.log");
+                    $errors[] = "Erro dentro do sistema.";
+                }
+            } else {
+                $errors[] = "Erro ao mover arquivo.";
+            }
+        }
+    }
+
+    if(!empty($errors)){
+        Session::setFlash('error', implode('<br>', $errors));
+    }
+
+    header('Location: ../../public/dashboard.php');
     exit();
 }
 

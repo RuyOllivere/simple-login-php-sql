@@ -9,7 +9,7 @@ class User{
     }
 
     public function findByEmail($email) {
-        $sql = "SELECT id, nome, email, senha_hash, ativo, data_cadastro, ultimo_login FROM usuarios WHERE email =?";
+        $sql = "SELECT id, nome, email, senha_hash, profile_picture, ativo, data_cadastro, ultimo_login FROM usuarios WHERE email =?";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$email]);
@@ -19,7 +19,7 @@ class User{
 
     public function findById($user_id){
 
-        $sql = "SELECT id, nome, email, senha_hash, ativo, data_cadastro, ultimo_login FROM usuarios WHERE id = ? AND ativo = 1";
+        $sql = "SELECT id, nome, email, senha_hash, profile_picture, ativo, data_cadastro, ultimo_login FROM usuarios WHERE id = ? AND ativo = 1";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$user_id]);
@@ -86,6 +86,18 @@ class User{
         $sql = "UPDATE usuarios SET senha_hash = ? WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([$new_password_hash, $user_id]);
+    }
+
+    public function updateProfile($user_id, $nome) {
+        $sql = "UPDATE usuarios SET nome = ? WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$nome, $user_id]);
+    }
+
+    public function updateProfilePicture($user_id, $profile_picture_path) {
+        $sql = "UPDATE usuarios SET profile_picture = ? WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$profile_picture_path, $user_id]);
     }
 
 }

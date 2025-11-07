@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
+    profile_picture VARCHAR(255) NULL,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ultimo_login TIMESTAMP NULL,
     ativo TINYINT(1) DEFAULT 1,

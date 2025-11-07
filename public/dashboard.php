@@ -67,18 +67,44 @@ $csrf_token = Security::generateCSFRToken();
                             <div class="col-md-6 mb-4">
                                 <div class="card h-100">
                                     <div class="card-header">
+                                        <h5 class="mb-0">Perfil</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <?php if($usuario['profile_picture']): ?>
+                                            <img src="<?php echo htmlspecialchars($usuario['profile_picture']); ?>" alt="Foto de Perfil" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                                        <?php else: ?>
+                                            <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                                                <span class="text-white fs-1"><?php echo strtoupper(substr($usuario['nome'], 0, 1)); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <h6><?php echo htmlspecialchars($usuario['nome']);?></h6>
+                                        <p class="text-muted"><?php echo htmlspecialchars($usuario['email']);?></p>
+                                        <form action="../src/controllers/AuthController.php?action=upload_profile_picture" method="POST" enctype="multipart/form-data" class="mt-3">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                                            <div class="mb-3">
+                                                <input type="file" name="profile_picture" id="profile_picture" class="form-control" accept="image/*" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-sm">Alterar Foto</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
                                         <h5 class="mb-0">Informações da Conta</h5>
                                     </div>
                                     <div class="card-body">
                                         <p><strong>ID:</strong> <?php echo $usuario['id'];?></p>
-                                        <p><strong>NOME:</strong> <?php echo htmlspecialchars($usuario['nome']);?></p>
-                                        <p><strong>EMAIL:</strong> <?php echo htmlspecialchars($usuario['email']);?></p>
                                         <p><strong>DATA CADASTRO:</strong> <?php echo date('d/m/Y H:i', strtotime($usuario['data_cadastro']));?></p>
                                         <p><strong>ÚLTIMO LOGIN:</strong> <?php echo $usuario['ultimo_login'] ? date('d/m/Y H:i', strtotime($usuario['ultimo_login'])) : 'Primeiro login';?></p>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="card h-100">
                                     <div class="card-header">
