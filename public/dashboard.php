@@ -118,6 +118,18 @@ $csrf_token = Security::generateCSFRToken();
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Entretenimento</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <p>🎰 Divirta-se no nosso cassino virtual!</p>
+                                        <a href="casinoPlane.php" class="btn btn-warning">Ir para Casino Plane</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">

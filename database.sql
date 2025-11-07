@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(255) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(255) NULL,
+    coins INT DEFAULT 100,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ultimo_login TIMESTAMP NULL,
     ativo TINYINT(1) DEFAULT 1,
@@ -55,6 +56,19 @@ CREATE TABLE tokens_reset (
 );
 
 ALTER TABLE usuarios ADD COLUMN email_verificado TINYINT(1) DEFAULT 0;
+
+-- Credit Cards table for withdrawals
+CREATE TABLE IF NOT EXISTS credit_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    card_number VARCHAR(255) NOT NULL,
+    expiry_date VARCHAR(10) NOT NULL,
+    cvv VARCHAR(10) NOT NULL,
+    cardholder_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    INDEX idx_user_id (user_id)
+) ENGINE = InnoDB;
 
 -- Insert example user with password: '12345'
 

@@ -30,105 +30,61 @@ $csrf_token = Security::generateCSFRToken();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redefinir Senha</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Estilo opcional -->
-    <style>
-        body {
-            background: linear-gradient(135deg, #007bff 0%, #00b4d8 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        .card-header {
-            background: linear-gradient(90deg, #007bff, #00b4d8);
-            color: white;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(90deg, #007bff, #00b4d8);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(90deg, #0069d9, #0096c7);
-        }
-
-        .alert {
-            border-radius: 8px;
-        }
-
-        label {
-            font-weight: 500;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
-<body>
-
-    <div class="container">
+<body class="bg-light">
+    <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-5">
-                <div class="card">
-                    <div class="card-header text-center py-4">
-                        <h2 class="mb-0">Redefinir Senha</h2>
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h1 class="mb-0">Redefinir Senha</h1>
                     </div>
-                    <div class="card-body p-4">
-
+                    <div class="card-body">
                         <?php
                             $success = Session::getFlash('success');
                             $error = Session::getFlash('error');
 
                             if($success): ?>
-                                <div class="alert alert-success text-center mb-3">
-                                    <?php echo $success; ?>
-                                </div>
-                            <?php endif;
+                            <div class="alert alert-success">
+                                <?php echo $success; ?>
+                            </div>
+                        <?php endif;
 
-                            if($error): ?>
-                                <div class="alert alert-danger text-center mb-3">
-                                    <?php echo $error; ?>
-                                </div>
-                            <?php endif;
-                        ?>
+                        if($error): ?>
+                            <div class="alert alert-danger">
+                                <?php echo $error; ?>
+                            </div>
+                        <?php endif; ?>
 
                         <form action="../src/controllers/AuthController.php?action=reset_password" method="POST">
                             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                             <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
 
                             <div class="mb-3">
-                                <label for="nova_senha" class="form-label">Nova Senha</label>
-                                <input type="password" name="nova_senha" id="nova_senha" class="form-control" required minlength="8" placeholder="Digite uma nova senha" autocomplete="new-password">
+                                <label for="nova_senha" class="form-label">Nova Senha:</label>
+                                <input type="password" name="nova_senha" id="nova_senha" class="form-control" required minlength="8" placeholder="8 caracteres" autocomplete="new-password">
                             </div>
 
                             <div class="mb-3">
-                                <label for="confirmar_senha" class="form-label">Confirmar Senha</label>
-                                <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control" required minlength="8" placeholder="Confirme a nova senha" autocomplete="new-password">
+                                <label for="confirmar_senha" class="form-label">Confirmar Nova Senha:</label>
+                                <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control" required minlength="8" placeholder="8 caracteres" autocomplete="new-password">
                             </div>
 
-                            <div class="d-grid mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                     Redefinir Senha
-                                </button>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Redefinir Senha</button>
                             </div>
                         </form>
 
-                        <div class="text-center mt-4">
-                            <a href="login.php" class="text-decoration-none text-secondary">Voltar ao Login</a>
+                        <div class="text-center mt-3">
+                            <a href="login.php" class="btn btn-link">Voltar ao Login</a>
                         </div>
-
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>

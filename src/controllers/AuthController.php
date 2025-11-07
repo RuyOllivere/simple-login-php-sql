@@ -17,6 +17,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         handleUpdateProfile($pdo);
     } elseif($action === 'upload_profile_picture'){
         handleUploadProfilePicture($pdo);
+    } elseif($action === 'withdraw'){
+        handleWithdraw($pdo);
+    } elseif($action === 'update_coins'){
+        handleUpdateCoins($pdo);
     }
 }
 
@@ -365,6 +369,101 @@ function handleUploadProfilePicture($pdo){
 
     header('Location: ../../public/dashboard.php');
     exit();
+}
+
+function handleWithdraw($pdo){
+    if(!Security::verifyCSRFToken($_POST['csrf_token']) ?? ''){
+        Session::setFlash('error', "Token de segurança inválido");
+        header('Location: ../../public/withdraw.php');
+        exit();
+    }
+
+    $withdraw_amount = (int)($_POST['withdraw_amount'] ?? 0);
+    $card_number = Security::sanitizeInput($_POST['card_number'] ?? '');
+    $expiry_date = Security::sanitizeInput($_POST['expiry_date'] ?? '');
+    $cvv = Security::sanitizeInput($_POST['cvv'] ?? '');
+    $cardholder_name = Security::sanitizeInput($_POST['cardholder_name'] ?? '');
+
+    $errors = [];
+
+    if($withdraw_amount < 10 || $withdraw_amount > 1000){
+        $errors[] = "Valor de saque deve ser entre 10 e 1000 moedas.";
+    }
+
+    // Basic card validation
+    if(empty($card_number) || !preg_match('/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/', $card_number)){
+        $errors[] = "Número do cartão inválido.";
+    }
+
+    if(empty($expiry_date) || !preg_match('/^\d{2}\/\d{2}$/', $expiry_date)){
+        $errors[] = "Data de expiração inválida.";
+    }
+
+    if(empty($cvv) || !preg_match('/^\d{3,4}$/', $cvv)){
+        $errors[] = "CVV inválido.";
+    }
+
+    if(empty($cardholder_name) || strlen($cardholder_name) < 2){
+        $errors[] = "Nome no cartão é obrigatório.";
+    }
+
+    if(empty($errors)){
+        try{
+            // Save card information (in a real app, this would be encrypted)
+            $stmt = $pdo->prepare("INSERT INTO credit_cards (user_id, card_number, expiry_date, cvv, cardholder_name) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$_SESSION['user_id'], $card_number, $expiry_date, $cvv, $cardholder_name]);
+
+            // Simulate withdrawal processing
+            Session::setFlash('success', "Saque de {$withdraw_amount} moedas solicitado com sucesso! O valor será depositado em sua conta em até 3 dias úteis.");
+        } catch(Exception $e){
+            error_log("Withdraw error: " . $e->getMessage(), 3, "../logs/errors.log");
+            $errors[] = "Erro ao processar saque.";
+        }
+    }
+
+    if(!empty($errors)){
+        Session::setFlash('error', implode('<br>', $errors));
+    }
+
+    header('Location: ../../public/withdraw.php');
+    exit();
+}
+
+function handleUpdateCoins($pdo){
+    if(!Security::verifyCSRFToken($_POST['csrf_token']) ?? ''){
+        Session::setFlash('error', "Token de segurança inválido");
+        header('Location: ../../public/casinoPlane.php');
+        exit();
+    }
+
+    $new_balance = (int)($_POST['balance'] ?? 0);
+
+    $errors = [];
+
+    if($new_balance < 0){
+        $errors[] = "Saldo não pode ser negativo.";
+    }
+
+    if(empty($errors)){
+        try{
+            $userModel = new User($pdo);
+            if($userModel->updateCoins($_SESSION['user_id'], $new_balance)){
+                // Success - balance updated
+                echo json_encode(['success' => true]);
+                exit();
+            } else {
+                $errors[] = "Erro ao atualizar saldo.";
+            }
+        } catch(Exception $e){
+            error_log("Update coins error: " . $e->getMessage(), 3, "../logs/errors.log");
+            $errors[] = "Erro dentro do sistema.";
+        }
+    }
+
+    if(!empty($errors)){
+        echo json_encode(['success' => false, 'error' => implode('<br>', $errors)]);
+        exit();
+    }
 }
 
 ?>

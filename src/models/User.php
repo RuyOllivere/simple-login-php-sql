@@ -9,7 +9,7 @@ class User{
     }
 
     public function findByEmail($email) {
-        $sql = "SELECT id, nome, email, senha_hash, profile_picture, ativo, data_cadastro, ultimo_login FROM usuarios WHERE email =?";
+        $sql = "SELECT id, nome, email, senha_hash, profile_picture, coins, ativo, data_cadastro, ultimo_login FROM usuarios WHERE email =?";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$email]);
@@ -19,7 +19,7 @@ class User{
 
     public function findById($user_id){
 
-        $sql = "SELECT id, nome, email, senha_hash, profile_picture, ativo, data_cadastro, ultimo_login FROM usuarios WHERE id = ? AND ativo = 1";
+        $sql = "SELECT id, nome, email, senha_hash, profile_picture, coins, ativo, data_cadastro, ultimo_login FROM usuarios WHERE id = ? AND ativo = 1";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$user_id]);
@@ -98,6 +98,20 @@ class User{
         $sql = "UPDATE usuarios SET profile_picture = ? WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([$profile_picture_path, $user_id]);
+    }
+
+    public function getCoins($user_id) {
+        $sql = "SELECT coins FROM usuarios WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+        $result = $stmt->fetch();
+        return $result ? $result['coins'] : 0;
+    }
+
+    public function updateCoins($user_id, $coins) {
+        $sql = "UPDATE usuarios SET coins = ? WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$coins, $user_id]);
     }
 
 }
